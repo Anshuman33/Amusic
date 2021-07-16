@@ -44,8 +44,9 @@ public class PlaylistActivity extends AppCompatActivity {
     boolean mBound = false;
     MyBinder myBinder;
     PlaylistDatabaseHelper helper;
-    // Playlist list contains all the playlist
-    private static final int NO_OF_PLAYLIST=2;
+
+    // Playlist list contains all the playlists
+    private static final int NO_OF_PLAYLIST = 2;
     Playlist[] playlistArray = new Playlist[NO_OF_PLAYLIST];
 
     // Song controller fragment
@@ -115,7 +116,7 @@ public class PlaylistActivity extends AppCompatActivity {
 
     public Playlist loadFavouritePlaylist(){
         Cursor cursor = helper.retrieveAll(PlaylistDatabaseHelper.PLAYLIST_2);
-        Playlist playlist = new Playlist("Current");
+        Playlist playlist = new Playlist("Favourite");
 
         if(cursor.getCount()!=0){
             while(cursor.moveToNext()){

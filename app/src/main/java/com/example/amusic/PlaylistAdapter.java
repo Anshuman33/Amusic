@@ -17,7 +17,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+/*
+    This is the adapter class for displaying playlists. It takes in the playlist object and fetches
+    the required data for the UI to render.
+ */
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder> {
     MyBinder mBinder;
     Playlist playlist,favPlaylist;
@@ -40,8 +43,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflates individual playlist item view from resources
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.playlist_item,parent,false);
+        View view = inflater.inflate(R.layout.playlist_item, parent,false);
         return new PlaylistViewHolder(view);
     }
 
@@ -51,8 +55,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         handler.post(new Runnable() {
             @Override
             public void run() {
+                // Set the bitmap for playlist item
                 Bitmap bitmap = playlist.getSongArt(position);
-                if(bitmap!=null){
+                if(bitmap != null){
                     holder.img.setImageBitmap(bitmap);
                 }
                 else{
@@ -62,47 +67,43 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
         });
 
+
         holder.songText.setText(playlist.getSongName(position));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Handler handler = new Handler(Looper.myLooper());
-                handler.post(new Runnable(){
-                    @Override
-                    public void run() {
-                        mBinder.setPlaylist(playlist);
-                        mBinder.currentIndex = position;
-                        mBinder.initMediaPlayer(playlist.getSongUri(position));
-                        mBinder.play();
-                    }
-                });
-            }
-
+        // Play the respective song when the song's holder is clicked
+        holder.itemView.setOnClickListener(view -> {
+            Handler handler1 = new Handler(Looper.myLooper());
+            handler1.post(() -> {
+                mBinder.setPlaylist(playlist);
+                mBinder.currentIndex = position;
+                mBinder.initMediaPlayer(playlist.getSongUri(position));
+                mBinder.play();
+            });
         });
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean state) {
-                //Log.v("MYDEBUG",favPlaylist.songnameList.toString());
 
-                if(state){
-                    Log.v("MYDEBUG","Song Liked");
-                    favPlaylist.addNewSong(new Song(playlist.getSongUri(position),playlist.getSongArt(position),playlist.getSongName(position)));
-                    FavouriteActivity.playlistAdapter.notifyDataSetChanged();
-                    helper.insertData(PlaylistDatabaseHelper.PLAYLIST_2,playlist.getSong(position));
-                    //Log.v("MYDEBUG",favPlaylist.songnameList.toString());
+        // If the song is already marked as liked, check the checkbox
+        if(playlist.getSongLikeStatus(position) == 1){
+            holder.checkBox.setChecked(true);
+        }
+        else{
+            holder.checkBox.setChecked(false);
+        }
 
+        // When the song is liked, add the song to the Favourite's playlist
+        // and remove song when deselected.
+        holder.checkBox.setOnCheckedChangeListener((compoundButton, state) -> {
+            if (state) {
+                Log.v("MYDEBUG", "Song Liked");
+                favPlaylist.addNewSong(new Song(playlist.getSongUri(position), playlist.getSongArt(position), playlist.getSongName(position)));
+                helper.insertData(PlaylistDatabaseHelper.PLAYLIST_2, playlist.getSong(position));
+                FavouriteActivity.playlistAdapter.notifyDataSetChanged();
 
-                }
-                else{
-                    Log.v("MYDEBUG","Song removed from liked songs");
-                    //Log.v("MYDEBUG",favPlaylist.songnameList.toString());
-                    favPlaylist.deleteSong(new Song(playlist.getSongUri(position),playlist.getSongArt(position),playlist.getSongName(position)));
-                    helper.deleteSongByName(PlaylistDatabaseHelper.PLAYLIST_2,playlist.getSongName(position));
+            } else {
+                Log.v("MYDEBUG", "Song removed from liked songs");
+                favPlaylist.deleteSong(new Song(playlist.getSongUri(position), playlist.getSongArt(position), playlist.getSongName(position)));
+                helper.deleteSongByName(PlaylistDatabaseHelper.PLAYLIST_2, playlist.getSongName(position));
+                FavouriteActivity.playlistAdapter.notifyDataSetChanged();
 
-                    FavouriteActivity.playlistAdapter.notifyDataSetChanged();
-                }
             }
         });
 

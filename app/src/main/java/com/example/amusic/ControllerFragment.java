@@ -29,7 +29,7 @@ public class ControllerFragment extends Fragment {
 
     public void setBinder(MyBinder binder){
         mBinder = binder;
-        if(mBinder!=null){
+        if(mBinder != null){
             songTitle.setText(mBinder.getCurrentSongName());
         }
         UiUpdaterHandler.postAtFrontOfQueue(UiUpdater);

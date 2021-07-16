@@ -3,6 +3,7 @@ package com.example.amusic;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+// Song model class
 public class Song {
     private Bitmap albumArt;
     private Uri songUri;

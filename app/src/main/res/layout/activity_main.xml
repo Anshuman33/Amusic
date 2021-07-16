@@ -71,7 +71,7 @@
         app:srcCompat="@drawable/previous_track" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/mainAlbumArt"
         android:layout_width="240dp"
         android:layout_height="240dp"
         android:layout_marginTop="44dp"
@@ -93,7 +93,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/mainAlbumArt" />
 
     <TextView
         android:id="@+id/SongTitle"
